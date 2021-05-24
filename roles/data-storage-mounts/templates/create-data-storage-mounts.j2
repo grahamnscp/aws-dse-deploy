@@ -1,0 +1,18 @@
+#!/bin/sh
+
+/usr/sbin/pvcreate {{ data_storage_device }}
+/usr/sbin/vgcreate data {{ data_storage_device }}
+
+/usr/sbin/lvcreate --wipesignatures y -n cassandra -l 90%VG data
+
+/sbin/mkfs.xfs /dev/data/cassandra
+
+mkdir -p /var/lib/cassandra/
+DEV_UUID=`sudo blkid /dev/data/cassandra | awk '{print $2}' | sed 's/\"//g'`
+
+grep -q -F 'cassandra' /etc/fstab || echo ${DEV_UUID} '/var/lib/cassandra xfs defaults 0 0' >> /etc/fstab
+
+mount /var/lib/cassandra/
+
+/sbin/restorecon -Rv /var/lib/cassandra/
+

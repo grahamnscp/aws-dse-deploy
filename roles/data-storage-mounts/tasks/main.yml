@@ -1,0 +1,19 @@
+---
+
+# Setup kubernetes LPV storage
+
+- name: "Creating data volume storage script.."
+  template:
+    src: create-data-storage-mounts.j2
+    dest: /root/create-data-storage-mounts.sh
+    owner: root
+    group: root
+    mode: 755
+
+- name: "Creating data volume storage.."
+  shell: /root/create-data-storage-mounts.sh 2>&1 | /bin/tee -a /root/create-data-storage-mounts.log
+  args:
+    executable: /bin/sh
+    chdir: /root
+    creates: /root/create-data-storage-mounts.log
+

@@ -1,0 +1,28 @@
+---
+
+- hosts: all
+  roles:
+  - accept-host-keys
+  - ntp
+  - pre-deploy
+  - grub-config
+  - dse-os-config
+#  - update-packages
+  - firewall
+  - datastax-repo
+
+- hosts: bootstrap
+  roles:
+  - ccm-install
+  - dse-install-opscenter
+  - dse-install-dsestudio
+
+- hosts: nodes
+  roles:
+  - data-storage-mounts
+  - dse-install-package
+  - dse-install-node
+
+- hosts: node1
+  roles:
+  - dse-install-node1

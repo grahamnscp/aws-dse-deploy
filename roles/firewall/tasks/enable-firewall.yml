@@ -1,0 +1,41 @@
+---
+
+# firewalld
+- name: "Install firewalld"
+  yum:
+    name: firewalld
+    update_cache: yes
+    state: installed
+  when: 
+    - firewall_type == "firewalld"
+    - ((ansible_distribution == "CentOS" or ansible_distribution == "Red Hat Enterprise Linux") and ansible_distribution_major_version == "7")
+
+- name: "Ensure firewalld running"
+  systemd:
+    name: firewalld
+    enabled: yes
+    state: started
+  when: 
+    - firewall_type == "firewalld"
+    - ((ansible_distribution == "CentOS" or ansible_distribution == "Red Hat Enterprise Linux") and ansible_distribution_major_version == "7")
+
+
+# iptables
+- name: "Install iptables-services"
+  yum:
+    name: iptables-services
+    update_cache: yes
+    state: installed
+  when: 
+    - firewall_type == "iptables"
+    - ((ansible_distribution == "CentOS" or ansible_distribution == "Red Hat Enterprise Linux") and ansible_distribution_major_version == "7")
+
+- name: "Ensure iptables running"
+  systemd:
+    name: iptables
+    enabled: yes
+    state: started
+  when: 
+    - firewall_type == "iptables"
+    - ((ansible_distribution == "CentOS" or ansible_distribution == "Red Hat Enterprise Linux") and ansible_distribution_major_version == "7")
+

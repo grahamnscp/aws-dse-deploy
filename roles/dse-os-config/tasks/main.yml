@@ -1,0 +1,94 @@
+---
+
+- name: "sysctl disable swappiness"
+  sysctl:
+    name: vm.swappiness
+    value: 1
+    sysctl_set: yes
+    state: present
+    reload: yes
+
+# Network tuning:
+- name: "sysctl tuning net.ipv4.ip_local_port_range"
+  sysctl:
+    name: net.ipv4.ip_local_port_range
+    value: "10000 65535"
+    sysctl_set: yes
+    state: present
+    reload: yes
+
+- name: "sysctl tuning net.ipv4.tcp_window_scaling"
+  sysctl:
+    name: net.ipv4.tcp_window_scaling
+    value: 1
+    sysctl_set: yes
+    state: present
+    reload: yes
+
+- name: "sysctl tuning net.ipv4.tcp_rmem"
+  sysctl:
+    name: net.ipv4.tcp_rmem
+    value: "4096 87380 16777216"
+    sysctl_set: yes
+    state: present
+    reload: yes
+
+- name: "sysctl tuning net.ipv4.tcp_wmem"
+  sysctl:
+    name: net.ipv4.tcp_wmem
+    value: "4096 65536 16777216"
+    sysctl_set: yes
+    state: present
+    reload: yes
+
+- name: "sysctl tuning net.core.rmem_max"
+  sysctl:
+    name: net.core.rmem_max
+    value: "16777216"
+    sysctl_set: yes
+    state: present
+    reload: yes
+
+- name: "sysctl tuning net.core.wmem_max"
+  sysctl:
+    name: net.core.wmem_max
+    value: "16777216"
+    sysctl_set: yes
+    state: present
+    reload: yes
+
+- name: "sysctl	tuning net.core.netdev_max_backlog"
+  sysctl:
+    name: net.core.netdev_max_backlog
+    value: "2500"
+    sysctl_set: yes
+    state: present
+    reload: yes
+
+- name: "sysctl tuning net.core.somaxconn"
+  sysctl:
+    name: net.core.somaxconn
+    value: "65000"
+    sysctl_set: yes
+    state: present
+    reload: yes
+
+
+
+# catch all script for config not set directly by Ansible tasks above
+#
+- name: "Creating dse-os-config.sh script.."
+  template:
+    src: dse-os-config.sh.j2
+    dest: /root/dse-os-config.sh
+    owner: root
+    group: root
+    mode: 755
+
+- name: "Configuring OS parameters for DSE.."
+  shell: /root/dse-os-config.sh 2>&1 | /bin/tee -a /root/dse-os-config.log
+  args:
+    executable: /bin/sh
+    chdir: /root
+    creates: /root/dse-os-config.log
+

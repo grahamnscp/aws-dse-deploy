@@ -1,0 +1,44 @@
+# Ansible 'hosts' template file used to generate actual hosts file
+#
+# Param values a populated by run-terraform.sh
+#
+
+[all:vars]
+
+# for AWS
+aws_region=##REGION##
+ansible_user=centos
+ansible_port=22
+ansible_become=yes
+ansible_ssh_private_key_file=##ANSIBLE_SSH_PRIVATE_KEY_FILE##
+ansible_ssh_extra_args='-o StrictHostKeyChecking=no'
+
+
+# Ansible Options
+timeout=120
+deprecation_warnings=False
+
+# Deployment Switches
+linux_type=centos7
+firewall_enabled=false
+firewall_type=iptables
+daemon_selinux=false
+
+# DNS - Route53
+domain_name=##DOMAIN_NAME##
+admin_external_fqdn=##ADMIN_EXTERNAL_FQDN##
+
+# Data Volume Device Name
+data_storage_device=/dev/xvdb
+
+# DSE Variables
+dse_admin_username=##DSE_ADMIN_USERNAME##
+dse_admin_password=##DSE_ADMIN_PASSWORD##
+
+dse_studio_download=##DSE_STUDIO_DOWNLOAD##
+
+
+# Instances:
+[bootstrap]
+bootstrap ansible_host=##BOOTSTRAP_PUBLIC_IP##  fqdn=##BOOTSTRAP_NAME##
+

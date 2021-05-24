@@ -1,0 +1,103 @@
+# Global Variables:
+
+variable "name_prefix" {
+  default = "##TF_AWS_INSTANCE_PREFIX##"
+}
+
+variable "domainname" {
+  default = "##TF_AWS_DOMAINNAME##"
+}
+
+# Existing route53 zone_id to add sub domain entries to:
+variable "route53_zone_id" {
+  description = "Existing Route53 zone"
+  default = "##TF_AWS_ROUTE53_ZONE_ID##"
+}
+
+# ssh key name
+variable "key_name" {
+  default = "##TF_AWS_KEY_NAME##"
+}
+
+variable "owner_tag" {
+  default = "##TF_AWS_OWNER_TAG##"
+}
+variable "expiration_tag" {
+  default = "##TF_AWS_EXPIRATION_TAG##"
+}
+variable "purpose_tag" {
+  default = "##TF_AWS_PURPOSE_TAG##"
+}
+
+variable "aws_region" {
+  default = "##TF_AWS_REGION##"
+}
+
+variable "availability_zones" {
+  default = "##TF_AWS_AVAILABILITY_ZONES##"
+}
+
+data "aws_availability_zones" "available" {}
+
+variable "aws_centos_ami" {
+  default = "##TF_AWS_CENTOS_AMI##"
+}
+# second disk for data volumes
+variable "data_volume_size" {
+  description = "Size in GB for the second volume attached to the instance used for data"
+  default = ##TF_AWS_DATA_VOLUME_SIZE##
+}
+
+
+# instance details
+variable "node_count" {
+  description = "Number of linux nodes"
+  default = ##TF_AWS_NODE_COUNT##
+}
+variable "bootstrap_instance_type" {
+  default = "##TF_AWS_BOOTSTRAP_INSTANCE_TYPE##"
+}
+variable "node_instance_type" {
+  default = "##TF_AWS_NODE_INSTANCE_TYPE##"
+}
+
+# ELBs
+variable "admin_dns" {
+  default = "admin"
+}
+variable "apps_dns" {
+  default = "apps"
+}
+
+# Network Variables
+variable "dnsSupport" {
+  default = true
+}
+variable "dnsHostNames" {
+  default = true
+}
+variable "vpcCIDRblock" {
+  default = "172.12.0.0/16"
+}
+variable "subnetCIDRblock" {
+  default = "172.12.1.0/24"
+}
+variable "destinationCIDRblock" {
+  default = "0.0.0.0/0"
+}
+variable "ingressCIDRblock" {
+  type = "list"
+  default = [ "0.0.0.0/0" ]
+}
+variable "mapPublicIP" {
+  default = true
+}
+variable "instanceTenancy" {
+  default = "default"
+}
+
+# Other variables
+variable "dse_studio_download" {
+  default = "##DSE_STUDIO_DOWNLOAD##"
+}
+

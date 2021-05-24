@@ -1,0 +1,17 @@
+---
+
+- name: "Creating dse-studio-install.sh script.."
+  template:
+    src: dse-studio-install.sh.j2
+    dest: /root/dse-studio-install.sh
+    owner: root
+    group: root
+    mode: 755
+
+- name: "Installing dse-studio.."
+  shell: /root/dse-studio-install.sh 2>&1 | /bin/tee -a /root/dse-studio-install.log
+  args:
+    executable: /bin/sh
+    chdir: /root
+    creates: /root/dse-studio-install.log
+

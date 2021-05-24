@@ -1,0 +1,17 @@
+---
+
+- name: "Creating grub-config.sh script.."
+  template:
+    src: grub-config.sh.j2
+    dest: /root/grub-config.sh
+    owner: root
+    group: root
+    mode: 755
+
+- name: "Configuring grub boot parameters.."
+  shell: /root/grub-config.sh 2>&1 | /bin/tee -a /root/grub-config.log
+  args:
+    executable: /bin/sh
+    chdir: /root
+    creates: /root/grub-config.log
+

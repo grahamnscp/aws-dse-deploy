@@ -1,0 +1,19 @@
+---
+
+# setup the repo
+
+- name: "Add DataStax yum repo"
+  template: 
+    src: datastax.repo.j2
+    dest: /etc/yum.repos.d/datastax.repo
+    owner: root
+    group: root
+
+
+# Add GPG key to rpm database
+
+- name: "Add DataStax YUM GPG key to RPM database"
+  rpm_key:
+    state: present
+    key: "https://rpm.datastax.com/rpm/repo_key"
+

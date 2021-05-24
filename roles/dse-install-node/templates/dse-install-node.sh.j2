@@ -1,0 +1,11 @@
+#!/bin/bash -x
+
+ADMIN_ENDPOINT={{ admin_external_fqdn }}
+NODE_IP={{ ansible_default_ipv4['address'] }}
+
+# update DSE_LISTEN_ADDRESS in cassandra.yaml
+sed -i "s/##DSE_LISTEN_ADDRESS##/${NODE_IP}/g" /etc/dse/cassandra/cassandra.yaml
+
+# Start the DSE service..
+service dse start
+

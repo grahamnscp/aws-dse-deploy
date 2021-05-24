@@ -1,0 +1,120 @@
+---
+
+- include: set-hostname.yml
+
+
+# Add alias to .bashrc
+- lineinfile:
+    dest=/root/.bashrc
+    line="alias l='ls -latFrh'"
+    regexp="^.*latFrh.*$"
+    owner=root
+    state=present
+    insertafter=EOF
+
+# Various Packages
+- name: "Install LVM package"
+  yum:
+    name: lvm2
+    update_cache: yes
+    state: installed
+
+- name: "Install PolicyCoreUtils package for SELinux CLI"
+  yum:
+    name: policycoreutils
+    update_cache: yes
+    state: installed
+
+- name: "Install iproute package"
+  yum:
+    name: iproute
+    update_cache: yes
+    state: installed
+
+- name: "Install net-tools package"
+  yum:
+    name: net-tools
+    update_cache: yes
+    state: installed
+
+- name: "Install bind-utils package"
+  yum:
+    name: bind-utils
+    update_cache: yes
+    state: installed
+
+- name: "Install bridge-utils package"
+  yum:
+    name: bridge-utils
+    update_cache: yes
+    state: installed
+
+- name: "Install nfs-utils package"
+  yum:
+    name: nfs-utils
+    update_cache: yes
+    state: installed
+
+- name: "Install mlocate package"
+  yum:
+    name: mlocate
+    update_cache: yes
+    state: installed
+
+- name: "Install zip package"
+  yum:
+    name: zip
+    update_cache: yes
+    state: installed
+
+- name: "Install bzip2 package"
+  yum:
+    name: bzip2
+    update_cache: yes
+    state: installed
+
+
+- name: "Install java-1.8.0-openjdk"
+  yum:
+    name: java-1.8.0-openjdk
+    update_cache: yes
+    state: installed
+
+- name: "Install libaio"
+  yum:
+    name: libaio
+    update_cache: yes
+    state: installed
+
+- name: "Install vim-enhanced"
+  yum:
+    name: vim-enhanced
+    update_cache: yes
+    state: installed
+
+
+- name: "sysctl disable IPv6 for all interfaces"
+  sysctl:
+    name: net.ipv6.conf.all.disable_ipv6
+    value: 1
+    sysctl_set: yes
+    state: present
+    reload: yes
+
+- name: "sysctl disable IPv6 for default interface"
+  sysctl:
+    name: net.ipv6.conf.default.disable_ipv6
+    value: 1
+    sysctl_set: yes
+    state: present
+    reload: yes
+
+#- name: "sysctl net.bridge.bridge-nf-call-iptables"
+#  sysctl:
+#    name: net.bridge.bridge-nf-call-iptables
+#    value: 1
+#    sysctl_set: yes
+#    state: present
+#    reload: yes
+
+

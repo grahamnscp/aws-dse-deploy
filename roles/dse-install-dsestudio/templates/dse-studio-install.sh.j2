@@ -1,0 +1,27 @@
+#!/bin/bash -x
+
+# download DSE Studio tar file as not available in an RPM
+curl -o /root/{{ dse_studio_download }} https://downloads.datastax.com/datastax-studio/{{ dse_studio_download }}
+gzip -d /root/{{ dse_studio_download }}
+
+export STUDIO_VERSION=`echo {{ dse_studio_download }} | sed 's/.tar.gz//'`
+
+ls -latFrh ${STUDIO_VERSION}.tar
+
+cd /opt
+tar -xvf /root/${STUDIO_VERSION}.tar
+ln -s ./${STUDIO_VERSION} datastax-studio
+cd /opt/datastax-studio
+
+
+# update bind port
+sed -i 's/localhost/0.0.0.0/' conf/configuration.yaml
+
+# change default password?
+#   https://docs.datastax.com/en/allStudioConfig/
+
+# start the process as nonroot user
+useradd -d /home/studio -m -s /bin/bash studio
+chown -R studio:studio /opt/datastax-studio*
+su studio -c "nohup /opt/datastax-studio/bin/server.sh 0<&- &> /home/studio/dse-studio-server.log &"
+

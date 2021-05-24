@@ -1,0 +1,9 @@
+#!/bin/bash -x
+
+ADMIN_ENDPOINT={{ admin_external_fqdn }}
+NODE_IP={{ ansible_default_ipv4['address'] }}
+
+# Create new admin user and disable cassandra default
+/bin/cqlsh -u cassandra -p cassandra ${NODE_IP} -e "CREATE ROLE {{ dse_admin_username }} with SUPERUSER = true AND LOGIN = true and PASSWORD = '{{ dse_admin_password }}';"
+/bin/cqlsh -u {{ dse_admin_username }} -p {{ dse_admin_password }} -e "ALTER ROLE cassandra WITH SUPERUSER = false AND LOGIN = false AND password='disabled';"
+

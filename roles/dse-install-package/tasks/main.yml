@@ -1,0 +1,12 @@
+---
+
+- name: "Install datastax-agent package"
+  yum:
+    name: datastax-agent
+    state: present
+
+- name: "Install dse-full package"
+  yum:
+    name: dse-full
+    state: present
+

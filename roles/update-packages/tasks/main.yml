@@ -1,0 +1,5 @@
+---
+
+# Update to latest patches and reboot if necessary
+- include: update-packages.yml
+

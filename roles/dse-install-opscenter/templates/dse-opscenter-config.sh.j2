@@ -1,0 +1,27 @@
+#!/bin/bash -x
+
+ADMIN_PWD={{ dse_admin_password }}
+
+# wait a moment for opscenter to initialise and for the API to be available..
+sleep 30
+
+# Authenticate to the opscenter api with the default credentials
+API_LOGIN=`curl -X POST -d '{"username":"admin","password":"admin"}' -k --cert /var/lib/opscenter/ssl/opscenter.pem --key /var/lib/opscenter/ssl/opscenter.key 'https://127.0.0.1:8443/login'`
+
+API_TOKEN=`echo $API_LOGIN | sed 's/\"//g' |sed 's/}//g' | awk '{print $2}'`
+echo OpsCenter API token is: $API_TOKEN
+
+
+# Set the new admin password
+cat <<EOF> /tmp/apicmd
+curl -k --cert /var/lib/opscenter/ssl/opscenter.pem --key /var/lib/opscenter/ssl/opscenter.key \
+-H 'opscenter-session: ${API_TOKEN}' \
+-H 'Accept: application/json' \
+-d '{"password": "${ADMIN_PWD}", "old_password": "admin" }' \
+-X PUT https://127.0.0.1:8443/users/admin
+EOF
+RET_STRING=`sh /tmp/apicmd`
+echo API user update returned: $RET_STRING
+
+rm /tmp/apicmd
+

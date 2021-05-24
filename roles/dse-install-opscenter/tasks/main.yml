@@ -1,0 +1,34 @@
+---
+
+- name: "Install datastax-opscenter package.."
+  yum:
+    name: opscenter
+    state: present
+
+- name: "Enable SSL and Auth.."
+  copy:
+    src: opscenterd.conf
+    dest: /etc/opscenter
+    owner: opscenter
+    group: opscenter
+
+- name: "Start opscenter.."
+  systemd:
+    name: opscenterd
+    state: started
+
+- name: "Generate opscenter config script.."
+  template:
+    src: dse-opscenter-config.sh.j2
+    dest: /root/dse-opscenter-config.sh
+    owner: root
+    group: root
+    mode: 755
+
+- name: "Running opscenter config script.."
+  shell: /root/dse-opscenter-config.sh 2>&1 | /bin/tee -a /root/dse-opscenter-config.log
+  args:
+    executable: /bin/sh
+    chdir: /root
+    creates: /root/dse-opscenter-config.log
+

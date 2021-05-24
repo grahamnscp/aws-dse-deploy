@@ -1,0 +1,38 @@
+#!/bin/bash
+
+# Include here some OS configuration for DSE vs using Ansible tasks directly
+echo "Configuring OS for DSE.."
+
+# Tuned profile for Cassandra
+mkdir -p /etc/tuned/cassandra
+cat <<EOF>> /etc/tuned/cassandra/tuned.conf
+[main]
+include=throughput-performance
+
+[vm]
+transparent_hugepages=never
+
+[sysctl]
+vm.swappiness=1
+EOF
+
+tuned-adm profile cassandra
+
+
+# transparent_hugepages should be disabled by grub config role, but incase no reboot override again here
+echo never > /sys/kernel/mm/transparent_hugepage/enabled
+echo never > /sys/kernel/mm/transparent_hugepage/defrag
+
+
+# Set nofile and noproc limits
+cat <<EOF>> /etc/security/limits.conf
+* soft nofile 32768
+* hard nofile 32768
+EOF
+
+cat <<EOF>> /etc/security/limits.d/90-nproc.conf
+* soft nproc 32768
+* hard nproc 32768
+EOF
+
+

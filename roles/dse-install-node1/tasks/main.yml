@@ -1,0 +1,17 @@
+---
+
+- name: "Creating dse-install-node1.sh script.."
+  template:
+    src: dse-install-node1.sh.j2
+    dest: /root/dse-install-node1.sh
+    owner: root
+    group: root
+    mode: 755
+
+- name: "Extra DSE config on first node only.."
+  shell: /root/dse-install-node1.sh 2>&1 | /bin/tee -a /root/dse-install-node1.log
+  args:
+    executable: /bin/sh
+    chdir: /root
+    creates: /root/dse-install-node1.log
+

@@ -1,0 +1,7 @@
+#!/bin/bash
+
+# Default /etc/default/grub: GRUB_CMDLINE_LINUX="console=tty0 crashkernel=auto console=ttyS0,115200"
+
+sed -i '/GRUB_CMDLINE_LINUX/c\GRUB_CMDLINE_LINUX="console=tty0 crashkernel=auto console=ttyS0,115200 transparent_hugepage=never"' /etc/default/grub
+grub2-mkconfig -o /boot/grub2/grub.cfg
+

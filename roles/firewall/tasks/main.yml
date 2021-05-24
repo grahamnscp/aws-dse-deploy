@@ -1,0 +1,13 @@
+---
+
+# Enable firewall
+- include: enable-firewall.yml
+  when:
+    - ( firewall_enabled == "true" or firewall_enabled == "True" )
+
+
+# Disable firewall
+- include: disable-firewall.yml
+  when:
+    - ( firewall_enabled == "false" or firewall_enabled == "False" )
+

@@ -1,0 +1,83 @@
+---
+
+- name: "Copy working-files/dse.yaml to node.."
+  copy:
+    src: working-files/dse.yaml
+    dest: /etc/dse/dse.yaml
+    owner: cassandra
+    group: cassandra
+    mode: 0644
+
+- name: "Copy working-files/cassandra.yaml to node.."
+  copy:
+    src: working-files/cassandra.yaml
+    dest: /etc/dse/cassandra/cassandra.yaml
+    owner: cassandra
+    group: cassandra
+    mode: 0644
+
+- name: "Copy working-files/cassandra-rackdc.properties to node.."
+  copy:
+    src: working-files/cassandra-rackdc.properties
+    dest: /etc/dse/cassandra/cassandra-rackdc.properties
+    owner: cassandra
+    group: cassandra
+    mode: 0644
+
+- name: "Copy working-files/cassandra-topology.properties to node.."
+  copy:
+    src: working-files/cassandra-topology.properties
+    dest: /etc/dse/cassandra/cassandra-topology.properties
+    owner: cassandra
+    group: cassandra
+    mode: 0644
+
+- name: "Copy working-files/jvm-server.options to node.."
+  copy:
+    src: working-files/jvm-server.options
+    dest: /etc/dse/cassandra/jvm-server.options
+    owner: cassandra
+    group: cassandra
+    mode: 0644
+
+- name: "Copy working-files/dse to node.."
+  copy:
+    src: working-files/dse
+    dest: /etc/default/dse
+    owner: cassandra
+    group: cassandra
+    mode: 0755
+
+
+# now run the templated config script to finish local config
+- name: "Creating dse-install-node.sh script.."
+  template:
+    src: dse-install-node.sh.j2
+    dest: /root/dse-install-node.sh
+    owner: root
+    group: root
+    mode: 0755
+
+- name: "Configuring and starting DSE.."
+  shell: /root/dse-install-node.sh 2>&1 | /bin/tee -a /root/dse-install-node.log
+  args:
+    executable: /bin/sh
+    chdir: /root
+    creates: /root/dse-install-node.log
+
+
+
+# Start the DSE node services
+#
+- name: "Start datastax-agent (for opscenter).."
+  service:
+    name: datastax-agent
+    state: started
+
+# Moved service start to template script - as OS running systemd and this reports 'Service not found'
+#
+#- name: "Starting DSE service.."
+#  service:
+#    name: dse
+#    state: started
+
